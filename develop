@@ -1,12 +1,15 @@
 #!/usr/bin/env bash
 
+if [ ! -z "$BUILD_NUMBER" ]; then
+    # Linux: Get host address
+    # Via: http://stackoverflow.com/questions/13322485/how-to-i-get-the-primary-ip-address-of-the-local-machine-on-linux-and-os-x
+    export XDEBUG_HOST=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n1)
+else
+    # Mac: Get host address
+    export XDEBUG_HOST=$(ipconfig getifaddr en1)
+fi
 
-# Mac: Get host address
-export XDEBUG_HOST=$(ipconfig getifaddr en1)
-
-# Linux: Get host address
-# Via: http://stackoverflow.com/questions/13322485/how-to-i-get-the-primary-ip-address-of-the-local-machine-on-linux-and-os-x
-#export XDEBUG_HOST=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1' | head -n1)
+export CONTAINER_ENV=${CONTAINER_ENV:-local}
 
 # Other env variables
 export APP_ENV=${APP_ENV:-local}
